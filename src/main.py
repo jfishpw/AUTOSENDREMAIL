@@ -298,7 +298,19 @@ def main():
         help='运行的任务类型 (与 --run-once 一起使用)'
     )
     
+    parser.add_argument(
+        '--gui',
+        action='store_true',
+        help='启动图形界面'
+    )
+    
     args = parser.parse_args()
+    
+    if args.gui:
+        from .gui import EmailSchedulerGUI
+        gui = EmailSchedulerGUI(args.config)
+        gui.run()
+        return
     
     app = EmailSchedulerApp(args.config)
     
