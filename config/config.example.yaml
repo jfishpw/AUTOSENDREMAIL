@@ -1,0 +1,76 @@
+system:
+  log_level: INFO
+  log_file: logs/app.log
+  log_max_size: 10MB
+  log_backup_count: 5
+
+sender:
+  enabled: true
+  schedule:
+    type: daily
+    time: '09:00'
+  smtp:
+    host: smtp.example.com
+    port: 587
+    username: user@example.com
+    password: your_password_here
+    use_tls: true
+    timeout: 30
+  email:
+    from_name: 发件人名称
+    reply_to: reply@example.com
+    subject: '邮件主题 - {date}'
+    body_type: html
+    body: |
+      <html>
+      <body>
+      <h1>邮件内容</h1>
+      <p>这是一封自动发送的邮件。</p>
+      </body>
+      </html>
+  recipients:
+    to:
+      - recipient1@example.com
+      - recipient2@example.com
+    cc: []
+    bcc: []
+  attachments:
+    - path: attachments/send/report.pdf
+      required: true
+
+receiver:
+  enabled: true
+  schedule:
+    type: hourly
+    interval: 2
+  method: imap
+  imap:
+    host: imap.example.com
+    port: 993
+    username: user@example.com
+    password: your_password_here
+    use_ssl: true
+    folder: INBOX
+  outlook:
+    profile: Outlook
+    mailbox: user@example.com
+    folder: Inbox
+  filters:
+    from: []
+    subject_pattern: ''
+    has_attachment: true
+    unread_only: true
+    latest_only: false
+    max_emails: 100  # 最多获取的邮件数量（避免邮箱邮件过多导致超时）
+  save:
+    path: attachments/receive/{date}/{sender}
+    filename_conflict: rename
+    allowed_extensions:
+      - pdf
+      - xlsx
+      - docx
+    max_size: 50MB
+  after_receive:
+    mark_read: true
+    move_to: null
+    delete: false
